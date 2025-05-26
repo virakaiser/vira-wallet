@@ -1,0 +1,7 @@
+name: vira-wallet
+version: 1.0.0
+author: viracokaiser
+api-version: 1.18
+libraries:
+  - org.springframework:spring-context:6.1.4
+main: net.masternation.wallet.WalletApp
