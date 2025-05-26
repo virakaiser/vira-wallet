@@ -8,7 +8,7 @@ import me.masterkaiser.framework.config.YamlConfig;
 @YamlConfig(fileName = "commands")
 public class Commands extends OkaeriConfig {
 
-    public String prefix = "master-wpln";
+    public String prefix = "vira-wallet";
 
     public CommandMeta wallet = new CommandMeta("wallet")
             .setUsage("/wallet")
