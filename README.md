@@ -106,6 +106,13 @@ offers:
 
 ---
 
+## Images
+![not_found](https://github.com/virakaiser/vira-wallet/blob/master/images/2025-05-26_15.28.08.png)
+
+---
+
+---
+
 ## 📄 License
 
 You are allowed to use this plugin freely. However, you may NOT:
@@ -115,3 +122,4 @@ You are allowed to use this plugin freely. However, you may NOT:
 All rights reserved.
 
 ---
+
