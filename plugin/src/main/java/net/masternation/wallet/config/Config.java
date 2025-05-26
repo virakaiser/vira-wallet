@@ -110,7 +110,7 @@ public class Config extends OkaeriConfig {
                     1,
                     new ItemBuilder(Material.IRON_HELMET).setDisplayName("&6VIP"),
                     new ListBuilder<String>()
-                            .add("lp user {user} parent add vip")
+                            .add("lp user {player} parent add vip")
                             .build(),
                     new ArrayList<>()
             ))
@@ -122,7 +122,7 @@ public class Config extends OkaeriConfig {
                     2,
                     new ItemBuilder(Material.DIAMOND_HELMET).setDisplayName("&eSVIP"),
                     new ListBuilder<String>()
-                            .add("lp user {user} parent add svip")
+                            .add("lp user {player} parent add svip")
                             .build(),
                     new ArrayList<>()
             ))
