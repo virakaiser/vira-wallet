@@ -15,7 +15,8 @@ import java.util.List;
 
 @YamlConfig(fileName = "config")
 public class Config extends OkaeriConfig {
-    
+
+    public String costFormat = "{cost} wPLN";
     public double discountPercentage = 50.0;
     public String discountCostFormat = "{cost} wPLN &8(&ddiscount -{percent}%&8)";
 

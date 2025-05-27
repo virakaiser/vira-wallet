@@ -24,7 +24,7 @@ public class OfferService {
 
     public String getCostString(@NotNull Offer offer, int amount) {
         if (this.config.discountPercentage <= 0.0) {
-            return FormatUtil.formatNumber(getCost(offer, amount)) + " zł";
+            return this.config.costFormat.replace("{cost}", FormatUtil.formatNumber(getCost(offer, amount)));
         }
 
         return this.config.discountCostFormat.replace("{cost}", FormatUtil.formatNumber(getCost(offer, amount)))
