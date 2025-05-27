@@ -78,6 +78,7 @@ Simply add a coin purchase option on your website, and set the command `/wallet 
 
 ## 📦 Example Offers
 
+You can create a mountable offer and use {amount} in the command.
 ```yaml
 offers:
   - id: legendary-keys
