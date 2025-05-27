@@ -2,6 +2,8 @@ package net.masternation.wallet.user;
 
 import eu.okaeri.tasker.core.Tasker;
 import lombok.RequiredArgsConstructor;
+import me.masterkaiser.util.RandomUtil;
+import net.masternation.wallet.config.Config;
 import net.masternation.wallet.user.contract.IUserService;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +22,7 @@ public class UserService implements IUserService<User, UUID> {
 
     private final Tasker tasker;
     private final UserRepository userRepository;
+    private final Config config;
     private final Set<UUID> blockedUsers = new HashSet<>();
 
     @Override
@@ -135,6 +138,28 @@ public class UserService implements IUserService<User, UUID> {
     public @NotNull CompletableFuture<Double> getWallet(@NotNull UUID key) {
         return retrieveUser(key)
                 .thenApply(User::getWallet);
+    }
+
+    public @NotNull CompletableFuture<Boolean> canClaimDailyReward(@NotNull UUID key) {
+        return retrieveUser(key)
+                .thenApply(User::canClaimDailyReward);
+    }
+
+    public @NotNull CompletableFuture<Double> claimDailyReward(@NotNull UUID key) {
+        this.blockedUsers.add(key);
+        CompletableFuture<Double> completableFuture = new CompletableFuture<>();
+
+        double rand = RandomUtil.randomDouble(this.config.dailyRewardMin, this.config.dailyRewardMax);
+        retrieveUser(key).thenAccept(user -> {
+            user.setWallet((user.getWallet() + rand));
+            user.claimDailyReward();
+            save(user, v -> {
+                this.blockedUsers.remove(key);
+                completableFuture.complete(rand);
+            });
+        });
+
+        return completableFuture;
     }
 
     @Override

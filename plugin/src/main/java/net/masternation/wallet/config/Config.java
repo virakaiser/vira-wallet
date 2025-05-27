@@ -9,6 +9,8 @@ import me.masterkaiser.framework.config.YamlConfig;
 import me.masterkaiser.util.ListBuilder;
 import net.masternation.wallet.offer.Offer;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +22,26 @@ public class Config extends OkaeriConfig {
     public double discountPercentage = 50.0;
     public String discountCostFormat = "{cost} wPLN &8(&ddiscount -{percent}%&8)";
 
+    public double dailyRewardMin = 0.01;
+    public double dailyRewardMax = 0.05;
+
     @Comment
     @Comment
     public GuiBuilder mainGui = new GuiBuilder("&8ItemShop", 4)
             .addItem(35, new ItemBuilder(Material.PAPER).setDisplayName("&4Top up your account at: &fhttps://shop.com"))
             .addStateItem("account", new ItemSlot(31, new ItemBuilder(Material.PLAYER_HEAD)
                     .setDisplayName("&9Profile")
-                    .addLoreLine("&f» &7You have &f{pln} wPLN")));
+                    .addLoreLine("&f» &7You have &f{pln} wPLN")))
+            .addStateItem("daily", new ItemSlot(35, new ItemBuilder(Material.LIME_DYE)
+                    .setDisplayName("&aDaily reward")
+                    .addLoreLine("&fYou can collect your reward.")
+                    .addLoreLine("&f")
+                    .addLoreLine("&eClick to collect {min}-{max} wPLN.")
+                    .addEnchantment(Enchantment.DURABILITY, 10)
+                    .addFlag(ItemFlag.HIDE_ENCHANTS)))
+            .addStateItem("daily-claimed", new ItemSlot(35, new ItemBuilder(Material.RED_DYE)
+                    .setDisplayName("&cDaily reward")
+                    .addLoreLine("&cYou have already claimed today's reward.")));
 
     @Comment
     @Comment

@@ -48,6 +48,8 @@ public class Messages extends OkaeriConfig {
 
     public RawMessage transactionSuccessMessage = new RawMessage("&aTransaction completed successfully.");
 
+    public RawMessage receiveDailyReward = new RawMessage("&aYou received {reward} wPLN from the daily reward.");
+
     public RawMessage purchaseMessage = new RawMessage(
             new ListBuilder<String>()
                     .add("&f")

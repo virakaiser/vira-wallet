@@ -7,6 +7,7 @@ import me.masterkaiser.bukkit.serializer.RawSerializer;
 import me.masterkaiser.framework.AppStatus;
 import me.masterkaiser.framework.persistence.EnablePersistence;
 import net.masternation.wallet.offer.Offer;
+import net.masternation.wallet.serializer.LocalDateTransformer;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -26,6 +27,7 @@ public class WalletApp extends BukkitApp {
         return registry -> {
             registry.register(new BukkitSerializers());
             registry.register(RawSerializer.getSerializer(Offer.class));
+            registry.register(new LocalDateTransformer());
         };
     }
 

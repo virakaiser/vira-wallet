@@ -4,6 +4,7 @@ import eu.okaeri.persistence.document.Document;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
@@ -16,5 +17,14 @@ public class User extends Document {
 
     private String lastName;
     private double wallet;
+    private LocalDate lastRewardClaimDate;
+
+    public boolean canClaimDailyReward() {
+        return this.lastRewardClaimDate == null || !this.lastRewardClaimDate.equals(LocalDate.now());
+    }
+
+    public void claimDailyReward() {
+        this.lastRewardClaimDate = LocalDate.now();
+    }
 
 }

@@ -19,7 +19,10 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Component
@@ -34,6 +37,7 @@ public class MainGui {
     private final Messages messages;
     private final ProcessingGui processingGui;
     private final OfferService offerService;
+    private final Set<UUID> dailyCoolDown = new HashSet<>();
 
     public CompletableFuture<Gui> build(@NotNull Player object) {
         CompletableFuture<Gui> guiCompletableFuture = new CompletableFuture<>();
@@ -43,15 +47,43 @@ public class MainGui {
                 return;
             }
 
-            Optional.ofNullable(this.config.mainGui.getStateItems().get("account")).ifPresent(itemSlot -> {
-                ItemStack is = itemSlot.getItemBuilder().build(m -> m.replace("{pln}", FormatUtil.formatNumber(RoundUtil.roundToDecimalPlaces(pln, 2))));
-                ItemMeta meta = is.getItemMeta();
-                if (meta instanceof SkullMeta skullMeta) {
-                    skullMeta.setOwningPlayer(object);
-                    is.setItemMeta(skullMeta);
-                }
+            account(gui, object, pln);
 
-                gui.setItem(itemSlot.getSlot(), is);
+            this.userService.canClaimDailyReward(object.getUniqueId()).thenAccept(aBoolean -> {
+                if (gui.getInventoryNullable() != null) {
+                    if (aBoolean) {
+                        Optional.ofNullable(this.config.mainGui.getStateItems().get("daily")).ifPresent(itemSlot -> {
+                            gui.setItem(itemSlot.getSlot(), itemSlot.getItemBuilder().build(m -> m
+                                    .replace("{max}", FormatUtil.formatNumber(this.config.dailyRewardMax))
+                                    .replace("{min}", FormatUtil.formatNumber(this.config.dailyRewardMin))), event -> {
+                                if (this.dailyCoolDown.contains(object.getUniqueId())) {
+                                    return;
+                                }
+
+                                this.dailyCoolDown.add(object.getUniqueId());
+                                this.userService.canClaimDailyReward(object.getUniqueId()).thenAccept(d -> {
+                                    if (!d) {
+                                        this.dailyCoolDown.remove(object.getUniqueId());
+                                        object.closeInventory();
+                                    } else {
+                                        this.userService.claimDailyReward(object.getUniqueId()).thenAccept(wPLN -> {
+                                            this.messages.receiveDailyReward.send(object, m -> m.replace("{reward}", FormatUtil.formatNumber(wPLN)));
+
+                                            if (gui.getInventoryNullable() != null) {
+                                                dailyTaken(gui);
+                                                account(gui, object, wPLN);
+                                            }
+
+                                            this.dailyCoolDown.remove(object.getUniqueId());
+                                        });
+                                    }
+                                });
+                            });
+                        });
+                    } else {
+                        dailyTaken(gui);
+                    }
+                }
             });
 
             this.config.offers.forEach(offer -> {
@@ -105,4 +137,26 @@ public class MainGui {
 
         return guiCompletableFuture;
     }
+
+    public void dailyTaken(@NotNull Gui gui) {
+        Optional.ofNullable(this.config.mainGui.getStateItems().get("daily-claimed")).ifPresent(itemSlot -> {
+            gui.setItem(itemSlot.getSlot(), itemSlot.getItemBuilder().build(m -> m
+                    .replace("{max}", FormatUtil.formatNumber(this.config.dailyRewardMax))
+                    .replace("{min}", FormatUtil.formatNumber(this.config.dailyRewardMin))), event -> {});
+        });
+    }
+
+    public void account(@NotNull Gui gui, @NotNull Player object, @NotNull Double pln) {
+        Optional.ofNullable(this.config.mainGui.getStateItems().get("account")).ifPresent(itemSlot -> {
+            ItemStack is = itemSlot.getItemBuilder().build(m -> m.replace("{pln}", FormatUtil.formatNumber(RoundUtil.roundToDecimalPlaces(pln, 2))));
+            ItemMeta meta = is.getItemMeta();
+            if (meta instanceof SkullMeta skullMeta) {
+                skullMeta.setOwningPlayer(object);
+                is.setItemMeta(skullMeta);
+            }
+
+            gui.setItem(itemSlot.getSlot(), is);
+        });
+    }
+
 }
