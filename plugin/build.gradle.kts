@@ -5,6 +5,14 @@ plugins {
 group = "net.masternation"
 version = "1.0.0"
 
+tasks {
+    shadowJar {
+        archiveBaseName.set("vira-wallet")
+        archiveClassifier.set("")
+        archiveVersion.set(project.version.toString())
+    }
+}
+
 repositories {
     mavenCentral()
     mavenLocal()
