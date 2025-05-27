@@ -120,7 +120,6 @@ offers:
 
 You are allowed to use this plugin freely. However, you may NOT:
 - Sell this plugin separately or as part of a plugin bundle.
-- Modify, alter, or create derivative works based on this plugin.
 
 All rights reserved.
 
