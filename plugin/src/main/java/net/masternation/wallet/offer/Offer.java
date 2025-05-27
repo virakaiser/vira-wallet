@@ -28,7 +28,10 @@ public class Offer {
 
     public void giveToUser(@NotNull Player player, int a) {
         if (this.commands != null) {
-            this.commands.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("{player}", player.getName()).replace("{amount}", String.valueOf(a))));
+            this.commands.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd
+                    .replace("{player}", player.getName())
+                    .replace("{amount}", String.valueOf(a)))
+            );
         }
 
         if (this.items != null) {
