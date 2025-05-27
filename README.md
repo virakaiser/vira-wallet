@@ -13,6 +13,12 @@ Supports multi-server environments using a shared MySQL database.
 
 ---
 
+## ❤️ Support
+
+Discord: https://discord.gg/3cMgyAEZ
+
+---
+
 ## 🔌 Requirements
 
 *  Spigot/Paper 1.18+
